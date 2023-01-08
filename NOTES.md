@@ -116,3 +116,59 @@ docker run \
 -p 4444:4444 \
 --expose=4444 ghcr.io/mortengredal/uniwise-devops-assignment:master
 ```
+
+When running on ubuntu on wsl, it was necessary to append "experimental": "enabled" to ~/.docker/config.json.  
+Otherwise docker login could fail.  
+
+
+### Kubernetes  
+Initial resources have been identified:  
+- config map
+- redis
+- secrets(?)
+- service
+- ingres
+- volume mount
+
+Do this by installing the helm CLI and running ```helm create uniwise-k8s``` it generates most of the boilerplate code.
+
+Initially, ServiceAccount isn't really necessary, but doing much harm either, as no permissions have been applied.  
+
+#### Process  
+With a helm chart ready, we can try and install it on the cluster using:  
+helm install uniwise-k8s .  
+Although the boilerplate stuff is created, the pod immediately crashes, but why?  
+By inspecting the ill-fated pod using ```kubectl logs uniwise-k8s-6dd88fd6b-b8hb2```  
+We can see that the same issue has reappeared:  
+```
+2023/01/08 20:39:45 open .env: no such file or directory
+2023/01/08 20:39:45 :
+panic: invalid redis URL scheme:
+
+goroutine 1 [running]:
+main.main()
+        /usr/src/app/main.go:156 +0x3c5
+```
+
+Time to use k8s secrets.yamls, or maybe configmaps?. In a real prod scenario, you'd use a secrets provider, like sealedsecrets, or perhaps hashicorp vault.
+For the sake of simplicity, I'll store it as plain text.  
+
+By the looks of it, secrets have yet to support binarydata, making proper file loading seemingly impossible.
+configmap, as of 1.10, supports it. https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.10.md#apps  
+
+I've implemented users-cm.yml, but it feels like a very hacky approach.  
+
+
+#### I don't think godotenv seems like a proper tool for loading config when running in k8s  
+All it does is load a file and put them into go env variables, why not source
+
+#### Noteworthy changes in helm chart:  
+- values.yaml has had it's service.prot changed from 80 to 4444, to match the application port
+- removed liveness and readiness probes, as they do nothing but kill the pod.
+
+
+## Identified gotchas
+### 1 - configmap volume mounts messing with directory readability
+You guys are sneaky! The godotenv.load() will by default load the root dir, meaning you cannot do a easy configmap volume mount, as it would cause the directory to be "overwritten"
+The files prior would simply not be visible. Google did not fail me. https://www.golinuxcloud.com/mount-configmap-as-file-in-existing-directory/  
+That being said, this makes godotenv look even worse.

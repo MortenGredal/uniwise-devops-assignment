@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: godotenv-cm
+data:
+  .env: |
+    REDIS_URL: "redis://localhost:6379"
+    PORT: "4444"
