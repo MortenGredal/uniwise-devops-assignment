@@ -150,6 +150,7 @@ func main() {
 	port := os.Getenv("PORT")
 
 	redisURL := os.Getenv("REDIS_URL")
+	log.Println(redisURL + ":" + port)
 	opt, err := redis.ParseURL(redisURL)
 	if err != nil {
 		panic(err)
