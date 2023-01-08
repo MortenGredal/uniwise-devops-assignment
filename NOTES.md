@@ -89,8 +89,30 @@ Turns out the godotenv is *current-path* aware, which explains why it could find
 
 The winning script
 ```shell
-docker run -it \
---mount type=bind,source="$(pwd)"/secrets/users.json,target=/secrets/users.json,readonly \
---mount type=bind,source="$(pwd)"/.env,target=/usr/src/app/.env,readonly \
+docker run \
+--mount type=bind,source="$(pwd)"/secrets/users.json,target=/usr/src/app/secrets/users.json \
+--mount type=bind,source="$(pwd)"/.env,target=/usr/src/app/.env \
+-p 4444:4444 \
+--expose=4444 \
 uniwise
  ```
+
+### CI
+Because of time constraints, I've chosed github actions, their semi-custom language is ripe with gotchas, which can be hard to debug.
+
+#### Limitations
+Ideally, the docker workflow should not be able to run if the compile and test jobs fail.
+
+### Signs of lazyness
+At this point, the default github actions have gotten good enough to be used as-is. Prior I've built my own, which moderate success.  
+
+### Verifying the CI works  
+After successful workflows:
+
+```shell
+docker run \
+--mount type=bind,source="$(pwd)"/secrets/users.json,target=/usr/src/app/secrets/users.json \
+--mount type=bind,source="$(pwd)"/.env,target=/usr/src/app/.env \
+-p 4444:4444 \
+--expose=4444 ghcr.io/mortengredal/uniwise-devops-assignment:master
+```
