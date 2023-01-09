@@ -80,3 +80,9 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+
+uniwise:
+  redis:
+    name: redis://redis-master:6379
+  port: 4444
