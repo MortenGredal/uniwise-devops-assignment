@@ -173,6 +173,25 @@ Throwing everything at the bathsink seems to have made it work, not sure what ma
 ## Adding redis
 Adding the helm chart as a dependency is straightforward, but I've never tried to manually create persistent volumes in minukube.
 
+values.yaml override and redis wasn't playing nice, causing PVCs not to bind.  
+I resorted to using the helm cli instead.
+
+```shell
+helm install redis-cluster  \
+--set architecture=standalone  \
+--set cluster.slaveCount=3   \
+--set password=password   \
+--set securityContext.enabled=true   \
+--set securityContext.fsGroup=2000   \
+--set securityContext.runAsUser=1000   \
+--set volumePermissions.enabled=true   \
+--set master.persistence.enabled=true   \
+--set master.persistence.enabled=true   \
+--set master.persistence.path=/data   \
+--set master.persistence.size=8Gi   \
+--set master.persistence.storageClass=manual   \
+--set slave.persistence.storageClass=manual bitnami/redis 
+```
 
 
 ## Identified gotchas
