@@ -189,6 +189,7 @@ helm install redis  \
 --set master.persistence.path=/data   \
 --set master.persistence.size=8Gi   \
 --set master.persistence.storageClass=manual   \
+--set auth.enabled=false  \
  bitnami/redis 
 ```
 
