@@ -80,3 +80,13 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+redis:
+  master:
+    persistence:
+      enabled: true
+      path: data
+      size: 1Gi
+      storageClass: manual
+  architecture: standalone
+  auth:
+    enabled: false

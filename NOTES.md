@@ -170,6 +170,10 @@ All it does is load a file and put them into go env variables, why not source
 #### It was at this point, minikube started being flaky. I guess it didn't like being restarted.
 Throwing everything at the bathsink seems to have made it work, not sure what made it though.
 
+## Adding redis
+Adding the helm chart as a dependency is straightforward, but I've never tried to manually create persistent volumes in minukube.
+
+
 
 ## Identified gotchas
 ### 1 - configmap volume mounts messing with directory readability
