@@ -167,8 +167,12 @@ All it does is load a file and put them into go env variables, why not source
 - removed liveness and readiness probes, as they do nothing but kill the pod.
 
 
+#### It was at this point, minikube started being flaky. I guess it didn't like being restarted.
+Throwing everything at the bathsink seems to have made it work, not sure what made it though.
+
+
 ## Identified gotchas
 ### 1 - configmap volume mounts messing with directory readability
 You guys are sneaky! The godotenv.load() will by default load the root dir, meaning you cannot do a easy configmap volume mount, as it would cause the directory to be "overwritten"
 The files prior would simply not be visible. Google did not fail me. https://www.golinuxcloud.com/mount-configmap-as-file-in-existing-directory/  
-That being said, this makes godotenv look even worse.
+That being said, this makes godotenv look even worse. But that could of course we fixed with an env variable set in the deployment.yaml
