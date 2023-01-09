@@ -194,6 +194,7 @@ helm install redis  \
 
 ## Making the Go app use redis
 
+
 ## Identified gotchas
 ### 1 - configmap volume mounts messing with directory readability
 You guys are sneaky! The godotenv.load() will by default load the root dir, meaning you cannot do a easy configmap volume mount, as it would cause the directory to be "overwritten"

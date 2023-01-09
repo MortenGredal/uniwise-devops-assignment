@@ -4,5 +4,5 @@ metadata:
   name: godotenv-cm
 data:
   .env: |
-    REDIS_URL: "redis://localhost:6379"
-    PORT: "4444"
+    REDIS_URL: {{ .Values.uniwise.redis.name }}
+    PORT: {{ .Values.uniwise.port }}
