@@ -194,7 +194,7 @@ helm install redis  \
 ```
 
 ## Making the Go app use redis
-
+Values.yaml has had new keys added, and godonnet-cm.yaml harded values have been replaced with value references.
 
 ## Identified gotchas
 ### 1 - configmap volume mounts messing with directory readability
