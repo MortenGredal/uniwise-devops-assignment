@@ -196,8 +196,29 @@ helm install redis  \
 ## Making the Go app use redis
 Values.yaml has had new keys added, and godonnet-cm.yaml harded values have been replaced with value references.
 
+## Exposing the Go app
+Minikube out of the box does not have an ingress controller, or nginx for that matter. But fortunately that can be added.
+```🔎  Verifying ingress addon...``` 
+```Protip: make sure your minikube is actually running, and disable k8s component of docker desktop - they interssect```
+
+
+### Ingress itself
+Deploying an ingress rule is simple, in values.yaml:
+```yaml
+ingress:
+  enabled: true
+  hosts:
+    - host: uniwise.kube.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+```
+
+
 ## Identified gotchas
 ### 1 - configmap volume mounts messing with directory readability
 You guys are sneaky! The godotenv.load() will by default load the root dir, meaning you cannot do a easy configmap volume mount, as it would cause the directory to be "overwritten"
 The files prior would simply not be visible. Google did not fail me. https://www.golinuxcloud.com/mount-configmap-as-file-in-existing-directory/  
 That being said, this makes godotenv look even worse. But that could of course we fixed with an env variable set in the deployment.yaml
+
+Next time I'm using katacoda for this.
